@@ -25,6 +25,7 @@ class FileFormat:
         PDF = "pdf"
         DOCX = "docx"
         PPTX = "pptx"
+        XLSX = "xlsx"
         UNKNOWN = "unknown"
     """
     # TODO: Implement as Enum

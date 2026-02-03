@@ -10,6 +10,7 @@ import pytest
 # import fitz  # pymupdf
 # from docx import Document
 # from pptx import Presentation
+# from openpyxl import Workbook
 
 
 @pytest.fixture
@@ -79,6 +80,27 @@ def tmp_pptx(tmp_path):
     - Save to tmp_path / "test.pptx"
     """
     # TODO: Implement PPTX fixture
+    pass
+
+
+@pytest.fixture
+def tmp_xlsx(tmp_path):
+    """Generate a minimal XLSX for testing.
+
+    Creates an XLSX with one sheet containing a few cells.
+    Needed to instantiate XLSXExtractor even though extraction
+    isn't implemented.
+
+    Returns:
+        Path to the generated XLSX file.
+
+    Implementation notes:
+    - Use Workbook() to create new workbook
+    - Access active sheet with wb.active
+    - Set some cell values: ws['A1'] = 'Header'
+    - Save to tmp_path / "test.xlsx"
+    """
+    # TODO: Implement XLSX fixture
     pass
 
 

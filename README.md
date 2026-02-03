@@ -41,6 +41,7 @@ print(result.metadata)
 | PDF    | Full   | <!-- TODO: Add notes --> |
 | DOCX   | Full   | <!-- TODO: Add notes --> |
 | PPTX   | Stub   | Architecture supports it, not yet implemented |
+| XLSX   | Stub   | Architecture supports it, not yet implemented |
 
 ## Running Tests
 
@@ -67,7 +68,8 @@ document-extractor/
 │   │   ├── __init__.py
 │   │   ├── pdf_extractor.py
 │   │   ├── docx_extractor.py
-│   │   └── pptx_extractor.py
+│   │   ├── pptx_extractor.py
+│   │   └── xlsx_extractor.py
 │   └── utils/
 │       ├── __init__.py
 │       └── markdown_helpers.py
@@ -79,6 +81,7 @@ document-extractor/
 │   ├── test_pdf_extractor.py
 │   ├── test_docx_extractor.py
 │   ├── test_pptx_extractor.py
+│   ├── test_xlsx_extractor.py
 │   └── test_utils.py
 └── sample_docs/
     └── .gitkeep

@@ -79,6 +79,7 @@ This is not a "does it run" test. The evaluators are senior engineers on a GenAI
 | PDF | PyMuPDF | `pymupdf` | Fast, handles text + tables + images in one package. PyPDF2 is deprecated. pypdf doesn't handle tables/images natively. |
 | DOCX | python-docx | `python-docx` | Standard, well-maintained, handles paragraphs + tables + images |
 | PPTX | python-pptx | `python-pptx` | Standard, well-maintained, slide-by-slide extraction |
+| XLSX | openpyxl | `openpyxl` | Standard, well-maintained, workbook/sheet-based extraction |
 | Models | Pydantic | `pydantic` | Validation, serialization, self-documenting schemas |
 | Testing | pytest | `pytest` | Industry standard, clean assertions, fixtures |
 
@@ -134,7 +135,8 @@ document-extractor/
 │   │   ├── __init__.py
 │   │   ├── pdf_extractor.py
 │   │   ├── docx_extractor.py
-│   │   └── pptx_extractor.py
+│   │   ├── pptx_extractor.py
+│   │   └── xlsx_extractor.py
 │   └── utils/
 │       ├── __init__.py
 │       └── markdown_helpers.py
@@ -146,6 +148,7 @@ document-extractor/
 │   ├── test_pdf_extractor.py
 │   ├── test_docx_extractor.py
 │   ├── test_pptx_extractor.py
+│   ├── test_xlsx_extractor.py
 │   └── test_utils.py
 └── sample_docs/
     └── .gitkeep
@@ -173,6 +176,7 @@ dependencies = [
     "pymupdf>=1.24.0",
     "python-docx>=1.1.0",
     "python-pptx>=0.6.23",
+    "openpyxl>=3.1.0",
     "pydantic>=2.0.0",
 ]
 
@@ -193,6 +197,7 @@ pythonpath = ["."]
 pymupdf>=1.24.0
 python-docx>=1.1.0
 python-pptx>=0.6.23
+openpyxl>=3.1.0
 pydantic>=2.0.0
 pytest>=8.0.0
 pytest-cov>=4.0.0
@@ -226,6 +231,7 @@ class FileFormat(str, Enum):
     PDF = "pdf"
     DOCX = "docx"
     PPTX = "pptx"
+    XLSX = "xlsx"
     UNKNOWN = "unknown"
 
 
@@ -655,7 +661,56 @@ Override `extract_all()` to return a result with empty content and a single erro
 
 ---
 
-### 4.10 `src/utils/markdown_helpers.py` — Utility Functions
+### 4.10 `src/extractors/xlsx_extractor.py` — XLSX Extractor (Stub)
+
+**This extractor should be a documented stub, not a full implementation.** Same approach as PPTX.
+
+Excel files are workbook-based with multiple sheets, each containing cells. This is different from page/paragraph/slide-based formats.
+
+Create the class inheriting from `BaseExtractor`. For each method:
+- Add a complete docstring explaining what the method *would* do
+- Raise `NotImplementedError` with a descriptive message
+- Include inline comments explaining the `openpyxl` approach you'd take
+
+Example pattern:
+
+```python
+def extract_text(self) -> str:
+    """Extract text from all sheets as markdown.
+
+    Implementation approach:
+    - Load workbook with openpyxl.load_workbook(file_path)
+    - Iterate through workbook.sheetnames
+    - For each sheet, iterate through rows
+    - Convert cell values to strings
+    - Use sheet names as H2 headings
+    - Separate sheets with horizontal rules (---)
+    """
+    raise NotImplementedError(
+        "XLSX text extraction not yet implemented. "
+        "Architecture supports it — follows same BaseExtractor pattern. "
+        "Estimated implementation time: ~30 minutes."
+    )
+```
+
+**`extract_tables()` approach:**
+- Each sheet is essentially a table
+- Could treat each sheet as a TableData with the sheet name as caption
+- Or detect distinct table regions within sheets
+
+**`extract_images()` approach:**
+- Access images via worksheet._images
+- Extract dimensions and format from image objects
+
+**`extract_metadata()` approach:**
+- Use workbook.properties for title, author, created, modified
+- Sheet count from len(workbook.sheetnames)
+
+Override `extract_all()` to return a result with empty content and a single error noting the extractor is not yet implemented, rather than raising an exception.
+
+---
+
+### 4.11 `src/utils/markdown_helpers.py` — Utility Functions
 
 Create shared utility functions used across extractors:
 
@@ -670,7 +725,7 @@ Every function should have a docstring and type hints.
 
 ---
 
-### 4.11 `src/extractors/__init__.py`
+### 4.12 `src/extractors/__init__.py`
 
 Export all extractor classes:
 
@@ -678,11 +733,12 @@ Export all extractor classes:
 from src.extractors.pdf_extractor import PDFExtractor
 from src.extractors.docx_extractor import DOCXExtractor
 from src.extractors.pptx_extractor import PPTXExtractor
+from src.extractors.xlsx_extractor import XLSXExtractor
 
-__all__ = ["PDFExtractor", "DOCXExtractor", "PPTXExtractor"]
+__all__ = ["PDFExtractor", "DOCXExtractor", "PPTXExtractor", "XLSXExtractor"]
 ```
 
-### 4.12 `src/__init__.py`
+### 4.13 `src/__init__.py`
 
 Export the main public interface:
 
@@ -695,7 +751,7 @@ __all__ = ["DocumentRouter", "process_document", "ExtractionResult", "FileFormat
 
 ---
 
-### 4.13 Tests — `tests/`
+### 4.14 Tests — `tests/`
 
 #### `tests/conftest.py`
 
@@ -703,6 +759,7 @@ Create pytest fixtures:
 - `tmp_pdf` — Generate a simple PDF using pymupdf with: a title, two paragraphs, a simple 3x3 table, and an embedded image (can be a tiny 1x1 pixel PNG). Return the file path.
 - `tmp_docx` — Generate a simple DOCX using python-docx with: a Heading 1, a Heading 2, body paragraphs, a 2x3 table. Return the file path.
 - `tmp_pptx` — Generate a minimal PPTX file using python-pptx with one slide containing a title. Return the file path. This is needed to instantiate the extractor even though extraction isn't implemented.
+- `tmp_xlsx` — Generate a minimal XLSX file using openpyxl with one sheet containing a few cells. Return the file path. This is needed to instantiate the extractor even though extraction isn't implemented.
 - `tmp_empty_pdf` — Generate a PDF with no content (edge case).
 - `sample_dir` — Return a `tmp_path` directory for test outputs.
 
@@ -799,6 +856,18 @@ def test_pptx_extract_all_returns_result_with_error(tmp_pptx):
     assert "pptx" in result.errors[0].lower()
 ```
 
+#### `tests/test_xlsx_extractor.py`
+
+Test the XLSX stub extractor (same pattern as PPTX):
+- Test `XLSXExtractor` can be instantiated with a valid file path
+- Test `extract_text()` raises `NotImplementedError` with descriptive message
+- Test `extract_tables()` raises `NotImplementedError` with descriptive message
+- Test `extract_images()` raises `NotImplementedError` with descriptive message
+- Test `extract_metadata()` raises `NotImplementedError` with descriptive message
+- Test `extract_all()` returns a valid `ExtractionResult` (not an exception)
+- Test `extract_all()` result has an error message indicating XLSX is not implemented
+- Test `extract_all()` result has empty markdown, tables, and images lists
+
 #### `tests/test_utils.py`
 
 Test utility functions:
@@ -808,7 +877,7 @@ Test utility functions:
 
 ---
 
-### 4.14 `README.md`
+### 4.15 `README.md`
 
 Write a professional README with these sections:
 
@@ -853,7 +922,7 @@ Link to `LIMITATIONS.md` for known gaps.
 
 ---
 
-### 4.15 `LIMITATIONS.md`
+### 4.16 `LIMITATIONS.md`
 
 Write this as a professional engineering document, not an apology. Frame every limitation with: what it is, why it matters, and how you'd fix it.
 
@@ -880,7 +949,7 @@ Include a "Future Enhancements" section with:
 
 ---
 
-### 4.16 `src/logging_config.py` — Logging Setup
+### 4.17 `src/logging_config.py` — Logging Setup
 
 Create a centralized logging configuration:
 
@@ -956,10 +1025,11 @@ Follow this exact sequence. Each step should result in passing tests before movi
 4. **PDF extractor** (`src/extractors/pdf_extractor.py`) + test fixtures in `conftest.py` → run `test_pdf_extractor.py`
 5. **DOCX extractor** (`src/extractors/docx_extractor.py`) → run `test_docx_extractor.py`
 6. **PPTX stub** (`src/extractors/pptx_extractor.py`) + fixture in `conftest.py` → run `test_pptx_extractor.py`
-7. **Router** (`src/router.py`) → run `test_router.py`
-8. **Package init files** (`src/__init__.py`, `src/extractors/__init__.py`)
-9. **README.md** and **LIMITATIONS.md**
-10. **Full test suite** — `pytest tests/ -v` should pass clean
+7. **XLSX stub** (`src/extractors/xlsx_extractor.py`) + fixture in `conftest.py` → run `test_xlsx_extractor.py`
+8. **Router** (`src/router.py`) → run `test_router.py`
+9. **Package init files** (`src/__init__.py`, `src/extractors/__init__.py`)
+10. **README.md** and **LIMITATIONS.md**
+11. **Full test suite** — `pytest tests/ -v` should pass clean
 
 ---
 
