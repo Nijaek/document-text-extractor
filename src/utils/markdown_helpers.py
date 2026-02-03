@@ -4,8 +4,8 @@ Utility functions for markdown text processing.
 Shared across all extractors for consistent text handling.
 """
 
-# TODO: Uncomment when implementing
-# from ..models import TableData
+import re
+from ..models import TableData
 
 
 def clean_text(text: str) -> str:
@@ -16,15 +16,12 @@ def clean_text(text: str) -> str:
 
     Returns:
         Cleaned text with normalized whitespace.
-
-    Implementation notes:
-    - Remove null characters (\\x00)
-    - Normalize line endings (\\r\\n -> \\n)
-    - Strip leading/trailing whitespace
-    - Collapse multiple spaces to single space (within lines)
     """
-    # TODO: Implement text cleaning
-    pass
+    text = text.replace('\x00', '')      # Remove null characters
+    text = text.replace('\r\n', '\n')    # Normalize line endings
+    text = text.replace('\r', '\n')      # Handle standalone \r
+    text = text.strip()                   # Strip leading/trailing whitespace
+    return text
 
 
 def heading_to_markdown(text: str, level: int) -> str:
@@ -36,13 +33,9 @@ def heading_to_markdown(text: str, level: int) -> str:
 
     Returns:
         Markdown heading string (e.g., "## My Heading").
-
-    Implementation notes:
-    - Clamp level to 1-6 range
-    - Return "#" * level + " " + text.strip()
     """
-    # TODO: Implement heading conversion
-    pass
+    level = max(1, min(6, level))        # Clamp to 1-6
+    return '#' * level + ' ' + text.strip()
 
 
 def bold(text: str) -> str:
@@ -53,13 +46,8 @@ def bold(text: str) -> str:
 
     Returns:
         Text wrapped in ** markers.
-
-    Implementation notes:
-    - Return f"**{text}**"
-    - Handle empty string edge case
     """
-    # TODO: Implement bold wrapping
-    pass
+    return f'**{text}**'
 
 
 def italic(text: str) -> str:
@@ -70,13 +58,8 @@ def italic(text: str) -> str:
 
     Returns:
         Text wrapped in * markers.
-
-    Implementation notes:
-    - Return f"*{text}*"
-    - Handle empty string edge case
     """
-    # TODO: Implement italic wrapping
-    pass
+    return f'*{text}*'
 
 
 def normalize_whitespace(text: str) -> str:
@@ -87,16 +70,11 @@ def normalize_whitespace(text: str) -> str:
 
     Returns:
         Text with normalized blank lines.
-
-    Implementation notes:
-    - Use regex to replace 3+ consecutive newlines with 2
-    - Preserve intentional paragraph breaks (double newline)
     """
-    # TODO: Implement whitespace normalization
-    pass
+    return re.sub(r'\n{3,}', '\n\n', text)
 
 
-def table_to_json(table) -> dict:
+def table_to_json(table: TableData) -> dict:
     """Convert TableData to a dict with headers and rows.
 
     Args:
@@ -104,12 +82,10 @@ def table_to_json(table) -> dict:
 
     Returns:
         Dict with 'headers' (first row) and 'rows' (remaining rows).
-
-    Implementation notes:
-    - Extract first row as headers
-    - Remaining rows as data
-    - Return {"headers": [...], "rows": [[...], [...]]}
-    - Handle empty table edge case
     """
-    # TODO: Implement table conversion
-    pass
+    if not table.content:
+        return {'headers': [], 'rows': []}
+    return {
+        'headers': table.content[0],
+        'rows': table.content[1:]
+    }
