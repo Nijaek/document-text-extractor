@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "document-extractor"
+version = "0.1.0"
+description = "A flexible document extraction system for PDF, DOCX, and PPTX files"
+requires-python = ">=3.11"
+dependencies = [
+    "pymupdf>=1.24.0",
+    "python-docx>=1.1.0",
+    "python-pptx>=0.6.23",
+    "pydantic>=2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.0.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
