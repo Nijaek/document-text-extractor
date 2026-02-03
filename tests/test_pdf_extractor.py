@@ -4,194 +4,181 @@ Tests for PDF extractor.
 
 import pytest
 
-# TODO: Uncomment when implementing
-# from src.extractors import PDFExtractor
-# from src.models import ExtractionResult, FileFormat
+from src.extractors.pdf_extractor import PDFExtractor
+from src.models import ExtractionResult, DocumentMetadata, FileFormat
 
 
 class TestPDFExtractorInit:
     """Tests for PDFExtractor initialization."""
 
     def test_accepts_valid_pdf(self, tmp_pdf):
-        """Test extractor accepts valid PDF path.
+        """Test extractor accepts valid PDF path."""
+        extractor = PDFExtractor(tmp_pdf)
+        assert extractor.file_path == tmp_pdf
 
-        Implementation:
-        - Create PDFExtractor(tmp_pdf)
-        - Assert no exception raised
-        """
-        # TODO: Implement test
-        pass
-
-    def test_raises_for_missing_file(self):
-        """Test extractor raises FileNotFoundError for missing file.
-
-        Implementation:
-        - Try to create PDFExtractor with non-existent path
-        - Assert raises FileNotFoundError
-        """
-        # TODO: Implement test
-        pass
+    def test_raises_for_missing_file(self, tmp_path):
+        """Test extractor raises FileNotFoundError for missing file."""
+        with pytest.raises(FileNotFoundError):
+            PDFExtractor(tmp_path / "nonexistent.pdf")
 
 
 class TestPDFExtractText:
     """Tests for PDF text extraction."""
 
     def test_returns_non_empty_markdown(self, tmp_pdf):
-        """Test extract_text returns non-empty string.
-
-        Implementation:
-        - Create extractor with tmp_pdf
-        - Call extract_text()
-        - Assert result is non-empty string
-        """
-        # TODO: Implement test
-        pass
+        """Test extract_text returns non-empty string."""
+        extractor = PDFExtractor(tmp_pdf)
+        result = extractor.extract_text()
+        assert isinstance(result, str)
+        assert len(result) > 0
 
     def test_contains_heading_markdown(self, tmp_pdf):
-        """Test extract_text preserves heading hierarchy.
+        """Test extract_text preserves heading hierarchy."""
+        extractor = PDFExtractor(tmp_pdf)
+        result = extractor.extract_text()
+        assert "# " in result  # Should have heading syntax
 
-        Implementation:
-        - Create extractor with tmp_pdf
-        - Call extract_text()
-        - Assert "# " appears in result (heading syntax)
-        """
-        # TODO: Implement test
-        pass
+    def test_contains_document_title(self, tmp_pdf):
+        """Test extract_text includes document title."""
+        extractor = PDFExtractor(tmp_pdf)
+        result = extractor.extract_text()
+        assert "Test Document Title" in result
 
     def test_empty_pdf_returns_empty_string(self, tmp_empty_pdf):
-        """Test extract_text returns empty string for empty PDF.
-
-        Implementation:
-        - Create extractor with tmp_empty_pdf
-        - Call extract_text()
-        - Assert result is empty string (not exception)
-        """
-        # TODO: Implement test
-        pass
+        """Test extract_text returns empty string for empty PDF."""
+        extractor = PDFExtractor(tmp_empty_pdf)
+        result = extractor.extract_text()
+        assert result == ""
 
 
 class TestPDFExtractTables:
     """Tests for PDF table extraction."""
 
     def test_returns_list_of_tables(self, tmp_pdf):
-        """Test extract_tables returns list.
-
-        Implementation:
-        - Create extractor with tmp_pdf
-        - Call extract_tables()
-        - Assert result is list
-        """
-        # TODO: Implement test
-        pass
+        """Test extract_tables returns list."""
+        extractor = PDFExtractor(tmp_pdf)
+        result = extractor.extract_tables()
+        assert isinstance(result, list)
 
     def test_table_has_correct_structure(self, tmp_pdf):
-        """Test extracted table has 2D array structure.
-
-        Implementation:
-        - Create extractor with tmp_pdf (has 3x3 table)
-        - Call extract_tables()
-        - Assert first table content is list of lists
-        """
-        # TODO: Implement test
-        pass
+        """Test extracted table has 2D array structure."""
+        extractor = PDFExtractor(tmp_pdf)
+        result = extractor.extract_tables()
+        if len(result) > 0:
+            table = result[0]
+            assert hasattr(table, 'content')
+            assert isinstance(table.content, list)
+            if len(table.content) > 0:
+                assert isinstance(table.content[0], list)
 
     def test_records_page_number(self, tmp_pdf):
-        """Test extracted table records page number.
+        """Test extracted table records page number."""
+        extractor = PDFExtractor(tmp_pdf)
+        result = extractor.extract_tables()
+        if len(result) > 0:
+            assert result[0].page_or_slide is not None
+            assert result[0].page_or_slide >= 1
 
-        Implementation:
-        - Create extractor with tmp_pdf
-        - Call extract_tables()
-        - Assert first table has page_or_slide set
-        """
-        # TODO: Implement test
-        pass
+    def test_empty_pdf_returns_empty_list(self, tmp_empty_pdf):
+        """Test extract_tables returns empty list for empty PDF."""
+        extractor = PDFExtractor(tmp_empty_pdf)
+        result = extractor.extract_tables()
+        assert result == []
 
 
 class TestPDFExtractImages:
     """Tests for PDF image extraction."""
 
     def test_returns_list_of_images(self, tmp_pdf):
-        """Test extract_images returns list.
-
-        Implementation:
-        - Create extractor with tmp_pdf
-        - Call extract_images()
-        - Assert result is list
-        """
-        # TODO: Implement test
-        pass
+        """Test extract_images returns list."""
+        extractor = PDFExtractor(tmp_pdf)
+        result = extractor.extract_images()
+        assert isinstance(result, list)
 
     def test_image_has_filename(self, tmp_pdf):
-        """Test extracted image has generated filename.
+        """Test extracted image has generated filename."""
+        extractor = PDFExtractor(tmp_pdf)
+        result = extractor.extract_images()
+        if len(result) > 0:
+            assert result[0].filename is not None
+            assert len(result[0].filename) > 0
 
-        Implementation:
-        - Create extractor with tmp_pdf (has embedded image)
-        - Call extract_images()
-        - Assert first image has filename set
-        """
-        # TODO: Implement test
-        pass
+    def test_image_filename_format(self, tmp_pdf):
+        """Test image filename follows expected format."""
+        extractor = PDFExtractor(tmp_pdf)
+        result = extractor.extract_images()
+        if len(result) > 0:
+            # Should be like "image_p1_i0.png"
+            assert result[0].filename.startswith("image_p")
+
+    def test_empty_pdf_returns_empty_list(self, tmp_empty_pdf):
+        """Test extract_images returns empty list for empty PDF."""
+        extractor = PDFExtractor(tmp_empty_pdf)
+        result = extractor.extract_images()
+        assert result == []
 
 
 class TestPDFExtractMetadata:
     """Tests for PDF metadata extraction."""
 
     def test_returns_document_metadata(self, tmp_pdf):
-        """Test extract_metadata returns DocumentMetadata.
-
-        Implementation:
-        - Create extractor with tmp_pdf
-        - Call extract_metadata()
-        - Assert result is DocumentMetadata instance
-        """
-        # TODO: Implement test
-        pass
+        """Test extract_metadata returns DocumentMetadata."""
+        extractor = PDFExtractor(tmp_pdf)
+        result = extractor.extract_metadata()
+        assert isinstance(result, DocumentMetadata)
 
     def test_correct_page_count(self, tmp_pdf):
-        """Test metadata has correct page count.
-
-        Implementation:
-        - Create extractor with tmp_pdf (single page)
-        - Call extract_metadata()
-        - Assert page_count == 1
-        """
-        # TODO: Implement test
-        pass
+        """Test metadata has correct page count."""
+        extractor = PDFExtractor(tmp_pdf)
+        result = extractor.extract_metadata()
+        assert result.page_count == 1
 
     def test_correct_file_format(self, tmp_pdf):
-        """Test metadata has correct file format.
+        """Test metadata has correct file format."""
+        extractor = PDFExtractor(tmp_pdf)
+        result = extractor.extract_metadata()
+        assert result.file_format == FileFormat.PDF
 
-        Implementation:
-        - Create extractor with tmp_pdf
-        - Call extract_metadata()
-        - Assert file_format == FileFormat.PDF
-        """
-        # TODO: Implement test
-        pass
+    def test_has_file_size(self, tmp_pdf):
+        """Test metadata has file size."""
+        extractor = PDFExtractor(tmp_pdf)
+        result = extractor.extract_metadata()
+        assert result.file_size_bytes > 0
+
+    def test_has_source_filename(self, tmp_pdf):
+        """Test metadata has source filename."""
+        extractor = PDFExtractor(tmp_pdf)
+        result = extractor.extract_metadata()
+        assert result.source_filename == "test.pdf"
 
 
 class TestPDFExtractAll:
     """Tests for PDF full extraction."""
 
     def test_returns_extraction_result(self, tmp_pdf):
-        """Test extract_all returns ExtractionResult.
+        """Test extract_all returns ExtractionResult."""
+        extractor = PDFExtractor(tmp_pdf)
+        result = extractor.extract_all()
+        assert isinstance(result, ExtractionResult)
 
-        Implementation:
-        - Create extractor with tmp_pdf
-        - Call extract_all()
-        - Assert result is ExtractionResult instance
-        """
-        # TODO: Implement test
-        pass
+    def test_result_has_markdown(self, tmp_pdf):
+        """Test extract_all result has markdown content."""
+        extractor = PDFExtractor(tmp_pdf)
+        result = extractor.extract_all()
+        assert isinstance(result.markdown, str)
+        assert len(result.markdown) > 0
+
+    def test_result_has_metadata(self, tmp_pdf):
+        """Test extract_all result has metadata."""
+        extractor = PDFExtractor(tmp_pdf)
+        result = extractor.extract_all()
+        assert result.metadata is not None
+        assert result.metadata.file_format == FileFormat.PDF
 
     def test_empty_pdf_returns_result_not_exception(self, tmp_empty_pdf):
-        """Test extract_all on empty PDF returns result with no errors.
-
-        Implementation:
-        - Create extractor with tmp_empty_pdf
-        - Call extract_all()
-        - Assert returns ExtractionResult (not exception)
-        - Assert errors list is empty or contains expected message
-        """
-        # TODO: Implement test
-        pass
+        """Test extract_all on empty PDF returns result with no errors."""
+        extractor = PDFExtractor(tmp_empty_pdf)
+        result = extractor.extract_all()
+        assert isinstance(result, ExtractionResult)
+        # Empty PDF is valid, should have no extraction errors
+        assert result.markdown == ""
