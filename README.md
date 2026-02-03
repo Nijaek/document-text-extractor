@@ -23,7 +23,17 @@ Input File → DocumentRouter → Format Extractor → ExtractionResult
 pip install -r requirements.txt
 ```
 
-### Basic Usage
+### CLI Usage
+
+```bash
+# Extract document to JSON (creates report_extracted.json)
+python -m src report.pdf
+
+# Specify output file
+python -m src report.pdf -o results.json
+```
+
+### Library Usage
 
 ```python
 from src import process_document
@@ -60,6 +70,7 @@ document-extractor/
 ├── .gitignore
 ├── src/
 │   ├── __init__.py
+│   ├── __main__.py
 │   ├── models.py
 │   ├── router.py
 │   ├── base_extractor.py

@@ -751,7 +751,78 @@ __all__ = ["DocumentRouter", "process_document", "ExtractionResult", "FileFormat
 
 ---
 
-### 4.14 Tests — `tests/`
+### 4.14 `src/__main__.py` — CLI Entry Point
+
+This enables running the extractor as a module: `python -m src <file>`.
+
+**Usage:**
+```bash
+# Creates report_extracted.json in current directory
+python -m src report.pdf
+
+# Specify output file
+python -m src report.pdf -o results.json
+```
+
+**Implementation:**
+```python
+"""
+CLI entry point for document extraction.
+
+Usage:
+    python -m src <input_file> [-o <output_file>]
+"""
+
+import argparse
+import sys
+from pathlib import Path
+
+from .router import DocumentRouter
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(
+        description="Extract text, tables, and images from documents."
+    )
+    parser.add_argument("input_file", type=Path, help="Document to process")
+    parser.add_argument(
+        "-o", "--output",
+        type=Path,
+        help="Output JSON file (default: <input>_extracted.json)"
+    )
+    args = parser.parse_args()
+
+    # Validate input file exists
+    if not args.input_file.exists():
+        print(f"Error: File not found: {args.input_file}", file=sys.stderr)
+        return 1
+
+    # Determine output path
+    output_path = args.output or args.input_file.with_name(
+        f"{args.input_file.stem}_extracted.json"
+    )
+
+    # Process document
+    router = DocumentRouter()
+    try:
+        result = router.process_document(args.input_file)
+    except ValueError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        return 1
+
+    # Write output
+    output_path.write_text(result.model_dump_json(indent=2))
+    print(f"Extracted to: {output_path}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+```
+
+---
+
+### 4.15 Tests — `tests/`
 
 #### `tests/conftest.py`
 
@@ -877,7 +948,7 @@ Test utility functions:
 
 ---
 
-### 4.15 `README.md`
+### 4.16 `README.md`
 
 Write a professional README with these sections:
 
@@ -922,7 +993,7 @@ Link to `LIMITATIONS.md` for known gaps.
 
 ---
 
-### 4.16 `LIMITATIONS.md`
+### 4.17 `LIMITATIONS.md`
 
 Write this as a professional engineering document, not an apology. Frame every limitation with: what it is, why it matters, and how you'd fix it.
 
@@ -949,7 +1020,7 @@ Include a "Future Enhancements" section with:
 
 ---
 
-### 4.17 `src/logging_config.py` — Logging Setup
+### 4.18 `src/logging_config.py` — Logging Setup
 
 Create a centralized logging configuration:
 
@@ -1028,8 +1099,9 @@ Follow this exact sequence. Each step should result in passing tests before movi
 7. **XLSX stub** (`src/extractors/xlsx_extractor.py`) + fixture in `conftest.py` → run `test_xlsx_extractor.py`
 8. **Router** (`src/router.py`) → run `test_router.py`
 9. **Package init files** (`src/__init__.py`, `src/extractors/__init__.py`)
-10. **README.md** and **LIMITATIONS.md**
-11. **Full test suite** — `pytest tests/ -v` should pass clean
+10. **CLI** (`src/__main__.py`) — enables `python -m src <file>`
+11. **README.md** and **LIMITATIONS.md**
+12. **Full test suite** — `pytest tests/ -v` should pass clean
 
 ---
 

@@ -1,27 +1,41 @@
 # Known Limitations
 
-<!-- TODO: Frame each limitation with what it is, why it matters, and how to fix it -->
-
 ## Current Limitations
 
 | Limitation | Impact | Proposed Solution |
 |------------|--------|-------------------|
-| No OCR for scanned PDFs | Cannot extract text from image-only PDFs | <!-- TODO: Describe solution --> |
-| PPTX extractor not implemented | Cannot process PowerPoint files | <!-- TODO: Describe solution --> |
-| No AI-powered image descriptions | Only metadata extracted | <!-- TODO: Describe solution --> |
-| Complex/merged table cells | May produce incorrect alignment | <!-- TODO: Describe solution --> |
-| No password-protected file support | Encrypted documents fail | <!-- TODO: Describe solution --> |
-| No streaming for large documents | Memory issues on large files | <!-- TODO: Describe solution --> |
-| No multi-language testing | Possible encoding issues | <!-- TODO: Describe solution --> |
-| Format detection by extension only | Misnamed files route incorrectly | <!-- TODO: Describe solution --> |
-| DOCX page count unavailable | Incomplete metadata | <!-- TODO: Describe solution --> |
+| No OCR for scanned PDFs | Cannot extract text from image-only PDFs | Integrate Tesseract for local OCR or AWS Textract/Google Document AI for cloud-based OCR |
+| PPTX extractor not implemented | Cannot process PowerPoint files | Architecture fully supports it — follows same BaseExtractor pattern. Stub included. |
+| XLSX extractor not implemented | Cannot process Excel files | Architecture fully supports it — follows same BaseExtractor pattern. Stub included. |
+| No AI-powered image descriptions | Only metadata extracted, no semantic content | Integrate a vision model (Claude, GPT-4V) for automatic captioning. Requires API key and cost management. |
+| Complex/merged table cells | May produce incorrect cell alignment in some PDFs | Evaluate Camelot or table-detection ML models for higher accuracy on complex layouts |
+| No password-protected file support | Encrypted documents fail immediately | Add password parameter to extractors; use pymupdf's decryption for PDF |
+| No streaming for large documents | Memory issues on 100+ page documents | Implement page-by-page generator pattern for memory-efficient processing |
+| No multi-language testing | Possible encoding issues with non-English documents | Add encoding detection (chardet) and test with diverse language samples |
+| Format detection by extension only | Misnamed files route to wrong extractor | Add python-magic or file signature detection as fallback |
+| DOCX page count unavailable | Metadata incomplete for DOCX files | Would require rendering the document or using alternative library |
 
 ## Future Enhancements
 
-<!-- TODO: Expand on each enhancement -->
+### Multi-File Output Mode
 
-- **CLI Interface**: `python -m document_extractor path/to/file.pdf`
+Current CLI outputs a single JSON file. A future `--output-dir` flag would write separate files for different consumers:
+
+```
+output/
+├── quarterly_report.md          ← clean markdown for human review
+├── quarterly_report_tables.json ← tables as JSON for data pipelines
+├── quarterly_report_images/     ← extracted image files
+│   ├── image_p1_i0.png
+│   └── image_p3_i1.jpg
+└── quarterly_report_meta.json   ← document metadata
+```
+
+This separates concerns: markdown goes to reviewers, JSON feeds downstream systems, images are available for multimodal processing.
+
+### Other Enhancements
+
 - **FastAPI Wrapper**: HTTP API for web service usage
-- **Batch Processing**: Async support for multiple documents
-- **Output to File**: Write markdown, save images to directory
-- **Confidence Scoring**: Quality metrics for extraction results
+- **Batch Processing**: Async support for processing multiple documents
+- **Confidence Scoring**: Quality metrics for extraction results (e.g., OCR confidence, table detection confidence)
+- **Incremental Extraction**: Re-extract only changed pages for large documents
