@@ -1,19 +1,18 @@
 # Document Extraction System
 
-<!-- TODO: Write 2-3 sentence overview -->
-A Python-based document extraction system that processes PDF, DOCX, and PPTX files...
+A Python-based document extraction system that processes PDF, DOCX, PPTX, and XLSX files into structured output: clean markdown text, extracted tables (as JSON), image metadata, and document metadata. Designed for GenAI pipelines where extraction quality directly impacts downstream RAG performance.
 
 ## Overview
 
-<!-- TODO: Expand on what this does and why -->
+This system serves as the ingestion layer for document processing pipelines. It uses a Strategy pattern to handle multiple file formats through a unified interface, producing consistent `ExtractionResult` objects regardless of input format. The design prioritizes partial success — a corrupt table on page 5 won't prevent extraction of pages 1-4.
 
 ## Architecture
-
-<!-- TODO: Describe Strategy pattern approach -->
 
 ```
 Input File → DocumentRouter → Format Extractor → ExtractionResult
 ```
+
+Each file format has its own extractor class implementing a shared abstract interface (`BaseExtractor`). The `DocumentRouter` inspects file extensions and dispatches to the correct extractor. Adding a new format means creating one new class — no existing code changes required.
 
 ## Quick Start
 
@@ -48,10 +47,10 @@ print(result.metadata)
 
 | Format | Status | Notes |
 |--------|--------|-------|
-| PDF    | Full   | <!-- TODO: Add notes --> |
-| DOCX   | Full   | <!-- TODO: Add notes --> |
-| PPTX   | Stub   | Architecture supports it, not yet implemented |
-| XLSX   | Stub   | Architecture supports it, not yet implemented |
+| PDF    | Full   | Text with heading detection, tables, images, metadata |
+| DOCX   | Stub   | Architecture supports it, implementation pending |
+| PPTX   | Stub   | Architecture supports it, implementation pending |
+| XLSX   | Stub   | Architecture supports it, implementation pending |
 
 ## Running Tests
 
@@ -100,11 +99,9 @@ document-extractor/
 
 ## Design Decisions
 
-<!-- TODO: Write 1-2 sentences for each -->
-
-- **Strategy Pattern**: ...
-- **Pydantic Models**: ...
-- **Partial Success**: ...
-- **Markdown Output**: ...
+- **Strategy Pattern**: Each format gets its own extractor class implementing a shared interface. Adding formats requires no changes to existing code.
+- **Pydantic Models**: All data models use Pydantic for validation, serialization, and self-documenting schemas.
+- **Partial Success**: `ExtractionResult.errors` captures non-fatal issues so usable content is always returned, even if some elements fail.
+- **Markdown Output**: Text is converted to markdown with heading hierarchy preserved — the lingua franca for LLM input and semantic chunking.
 
 See [LIMITATIONS.md](LIMITATIONS.md) for known gaps and future improvements.

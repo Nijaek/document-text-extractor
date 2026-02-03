@@ -9,6 +9,9 @@ extraction requirements.
 import fitz  # pymupdf
 from datetime import datetime
 
+# Suppress PyMuPDF's recommendation to install pymupdf_layout package
+fitz.no_recommend_layout()
+
 from ..base_extractor import BaseExtractor
 from ..models import TableData, ImageData, DocumentMetadata, FileFormat
 from ..utils.markdown_helpers import clean_text, heading_to_markdown, normalize_whitespace

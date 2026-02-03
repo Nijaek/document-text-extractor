@@ -6,119 +6,76 @@ This is a deliberate scoping decision. The architecture fully supports
 PPTX extraction - implementation follows the same BaseExtractor pattern.
 """
 
-# TODO: Uncomment when implementing
-# from pptx import Presentation
-# from pathlib import Path
-# from ..base_extractor import BaseExtractor
-# from ..models import TableData, ImageData, DocumentMetadata, FileFormat, ExtractionResult
-# from ..logging_config import get_logger
+from pathlib import Path
 
-# logger = get_logger(__name__)
+from ..base_extractor import BaseExtractor
+from ..models import TableData, ImageData, DocumentMetadata, FileFormat, ExtractionResult
 
 
-class PPTXExtractor:
+class PPTXExtractor(BaseExtractor):
     """Extracts content from PPTX presentations.
 
-    NOTE: This is a stub implementation. All extraction methods raise
-    NotImplementedError with descriptive messages about the implementation
-    approach.
-
-    Implementation notes:
-    - Inherit from BaseExtractor
-    - Override extract_all() to return result with error instead of raising
+    NOTE: This is a stub implementation. The extract_all() method returns
+    a result with an error message indicating the extractor is not yet implemented.
     """
 
-    def __init__(self, file_path) -> None:
+    def __init__(self, file_path: Path | str) -> None:
         """Initialize PPTX extractor.
 
         Args:
             file_path: Path to PPTX file.
-
-        Implementation notes:
-        - Call super().__init__(file_path)
-        - Could load presentation here: Presentation(file_path)
         """
-        # TODO: Initialize with parent class
-        pass
+        super().__init__(file_path)
 
     def extract_text(self) -> str:
         """Extract text from all slides as markdown.
 
-        Implementation approach (not yet implemented):
-        - Load presentation with Presentation(file_path)
-        - Iterate through presentation.slides
-        - For each slide, iterate through slide.shapes
-        - For text frames (shape.has_text_frame), extract paragraphs
-        - Map slide titles to H2 headings
-        - Preserve bullet/numbered list formatting
-        - Separate slides with horizontal rules (---)
-
         Raises:
-            NotImplementedError: Always, as this is a stub.
+            NotImplementedError: PPTX extraction not yet implemented.
         """
-        # TODO: Raise NotImplementedError with descriptive message
-        pass
+        raise NotImplementedError("PPTX text extraction not yet implemented")
 
-    def extract_tables(self) -> list:
+    def extract_tables(self) -> list[TableData]:
         """Extract all tables from the presentation.
 
-        Implementation approach (not yet implemented):
-        - Iterate through slides
-        - For each slide, check shapes for tables (shape.has_table)
-        - Extract cell values into 2D array
-        - Record slide number
-
         Raises:
-            NotImplementedError: Always, as this is a stub.
+            NotImplementedError: PPTX extraction not yet implemented.
         """
-        # TODO: Raise NotImplementedError with descriptive message
-        pass
+        raise NotImplementedError("PPTX table extraction not yet implemented")
 
-    def extract_images(self) -> list:
+    def extract_images(self) -> list[ImageData]:
         """Extract metadata for all images.
 
-        Implementation approach (not yet implemented):
-        - Iterate through slides
-        - For each slide, check shapes for images
-        - Access image through shape.image
-        - Get dimensions, format, generate filename
-        - Record slide number
-
         Raises:
-            NotImplementedError: Always, as this is a stub.
+            NotImplementedError: PPTX extraction not yet implemented.
         """
-        # TODO: Raise NotImplementedError with descriptive message
-        pass
+        raise NotImplementedError("PPTX image extraction not yet implemented")
 
-    def extract_metadata(self) -> object:
+    def extract_metadata(self) -> DocumentMetadata:
         """Extract presentation metadata.
 
-        Implementation approach (not yet implemented):
-        - Access presentation.core_properties
-        - Map: title, author, created, modified
-        - Slide count: len(presentation.slides)
-        - File size from path
-
         Raises:
-            NotImplementedError: Always, as this is a stub.
+            NotImplementedError: PPTX extraction not yet implemented.
         """
-        # TODO: Raise NotImplementedError with descriptive message
-        pass
+        raise NotImplementedError("PPTX metadata extraction not yet implemented")
 
-    def extract_all(self) -> object:
-        """Override to return result with error instead of raising.
+    def extract_all(self) -> ExtractionResult:
+        """Return result with error indicating not yet implemented.
+
+        Overrides BaseExtractor to return a stub result instead of
+        calling individual extraction methods.
 
         Returns:
             ExtractionResult with empty content and error message.
-
-        Implementation notes:
-        - Do NOT call parent's extract_all() (it would catch NotImplementedError)
-        - Create minimal DocumentMetadata with FileFormat.PPTX
-        - Return ExtractionResult with:
-          - markdown = ""
-          - tables = []
-          - images = []
-          - errors = ["PPTX extraction not yet implemented..."]
         """
-        # TODO: Return stub result instead of raising
-        pass
+        return ExtractionResult(
+            markdown="",
+            tables=[],
+            images=[],
+            metadata=DocumentMetadata(
+                file_format=FileFormat.PPTX,
+                file_size_bytes=self.file_path.stat().st_size,
+                source_filename=self.file_path.name,
+            ),
+            errors=["PPTX extraction not yet implemented. File was recognized but content extraction is pending."],
+        )
