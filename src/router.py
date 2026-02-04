@@ -28,6 +28,11 @@ class DocumentRouter:
 
     Uses a registry dict mapping file extensions to extractor classes.
     This makes adding new formats trivial - just add to EXTRACTOR_MAP.
+
+    Note: This class currently holds no state — instance methods could be
+    static or module-level functions. The class structure is retained for
+    future extensibility (e.g., adding configuration options like OCR settings
+    or custom extractor registries) and to make the Strategy pattern explicit.
     """
 
     @staticmethod
