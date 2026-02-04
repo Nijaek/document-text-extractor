@@ -25,11 +25,18 @@ pip install -r requirements.txt
 ### CLI Usage
 
 ```bash
-# Extract document to JSON (creates report_extracted.json)
+# Extract document to JSON (saves to same directory as input)
 python -m src report.pdf
+# → Creates report_extracted.json
 
 # Specify output file
 python -m src report.pdf -o results.json
+
+# Try with included sample
+python -m src sample_docs/quarterly_report.pdf
+
+# View help
+python -m src --help
 ```
 
 ### Library Usage
@@ -94,7 +101,9 @@ document-extractor/
 │   ├── test_xlsx_extractor.py
 │   └── test_utils.py
 └── sample_docs/
-    └── .gitkeep
+    ├── .gitkeep
+    ├── quarterly_report.pdf
+    └── quarterly_report_extracted.json
 ```
 
 ## Design Decisions
