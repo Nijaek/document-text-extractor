@@ -12,22 +12,6 @@ This document is the single source of truth for building this project. Every des
 
 A Python-based document extraction system that processes PDF, DOCX, and PPTX files and produces structured output: clean markdown text, extracted tables (as JSON), image metadata, and document metadata. The output is unified across all formats via a shared data model.
 
-### Why Does This Exist?
-
-This is a coding challenge for an Associate Engineer position on a **Generative AI team** at a large healthcare enterprise. The team builds full-stack GenAI applications (Python backend, React frontend) that process enterprise documents. This system represents the **ingestion layer** of a GenAI pipeline — the quality of extraction directly determines downstream RAG (Retrieval Augmented Generation) quality.
-
-### What Is Being Evaluated?
-
-This is not a "does it run" test. The evaluators are senior engineers on a GenAI workstream. They are assessing:
-
-1. **Architecture quality** — Is this extensible? Can a new format be added without modifying existing code?
-2. **Code craftsmanship** — Type hints, docstrings, clear naming, separation of concerns
-3. **Self-awareness** — Are limitations documented honestly with a plan to address them?
-4. **Tradeoff articulation** — Can every decision be justified with a "because"?
-5. **GenAI context awareness** — Do design choices reflect understanding of how extracted content feeds into LLM pipelines?
-
-**Critical insight:** The challenge explicitly states it's okay to not finish everything. Depth and quality on fewer components beats shallow coverage of everything. Prioritize accordingly.
-
 ---
 
 ## 2. Design Decisions (Do Not Change These)
