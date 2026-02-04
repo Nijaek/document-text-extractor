@@ -1,0 +1,63 @@
+{
+  "markdown": "# Quarterly Financial Report\n\n## Q4 2024 Summary\n\nThis document provides an overview of our Q4 2024 performance.\n\nKey highlights include revenue growth, regional expansion, and new product launches.\n\n## Executive Summary\n\nRevenue increased by 15% year-over-year, driven by strong performance in the\n\nhealthcare technology sector. Operating margins improved to 23.5%.\n\n## Financial Metrics\n\nMetric Q3 2024 Q4 2024 Change\n\nRevenue ($M) 142.3 163.6 +15.0%\n\nOperating Income ($M) 31.2 38.4 +23.1%\n\nNet Income ($M) 24.8 29.7 +19.8%\n\nEPS ($) 1.24 1.49 +20.2%\n\n## Regional Performance\n\nNorth America contributed 65% of total revenue, followed by Europe (25%)\n\nand Asia-Pacific (10%). All regions showed positive growth.\n\n## Product Highlights\n\nOur flagship product saw 40% adoption increase. Below is our product logo:\n\n## Conclusion\n\nQ4 2024 demonstrated strong execution across all business units.\n\nWe remain confident in our 2025 outlook with continued investment in R&D.",
+  "tables": [
+    {
+      "content": [
+        [
+          "Metric",
+          "Q3 2024",
+          "Q4 2024",
+          "Change"
+        ],
+        [
+          "Revenue ($M)",
+          "142.3",
+          "163.6",
+          "+15.0%"
+        ],
+        [
+          "Operating Income ($M)",
+          "31.2",
+          "38.4",
+          "+23.1%"
+        ],
+        [
+          "Net Income ($M)",
+          "24.8",
+          "29.7",
+          "+19.8%"
+        ],
+        [
+          "EPS ($)",
+          "1.24",
+          "1.49",
+          "+20.2%"
+        ]
+      ],
+      "page_or_slide": 2,
+      "caption": null
+    }
+  ],
+  "images": [
+    {
+      "filename": "image_p3_i0.png",
+      "format": "png",
+      "width": 50,
+      "height": 50,
+      "alt_text": null,
+      "description": null,
+      "page_or_slide": 3
+    }
+  ],
+  "metadata": {
+    "title": "Quarterly Financial Report Q4 2024",
+    "author": "Finance Department",
+    "created_date": null,
+    "modified_date": null,
+    "page_count": 3,
+    "file_format": "pdf",
+    "file_size_bytes": 20061,
+    "source_filename": "quarterly_report.pdf"
+  },
+  "errors": []
+}

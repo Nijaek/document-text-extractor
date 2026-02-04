@@ -66,10 +66,12 @@ venv.bak/
 *.swo
 *~
 
-# Sample documents (keep .gitkeep)
+# Sample documents (keep .gitkeep, but include quarterly_report example)
 sample_docs/*.pdf
 sample_docs/*.docx
 sample_docs/*.pptx
+!sample_docs/quarterly_report.pdf
+!sample_docs/quarterly_report_extracted.json
 
 # OS files
 .DS_Store
