@@ -103,7 +103,9 @@ document-extractor/
 └── sample_docs/
     ├── .gitkeep
     ├── quarterly_report.pdf
-    └── quarterly_report_extracted.json
+    ├── quarterly_report_extracted.json
+    ├── project_status.docx
+    └── project_status_extracted.json
 ```
 
 ## Design Decisions

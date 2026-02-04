@@ -1,0 +1,43 @@
+{
+  "markdown": "# Project Status Report\n\n## Executive Summary\n\nThis document provides an overview of the Q4 project milestones and deliverables.\n\nKey achievements include the successful launch of the new platform and completion of user testing.\n\n## Milestones\n\nThe following milestones were completed on schedule:\n\n## Next Steps\n\nContinue documentation efforts and begin planning for Q1 feature releases.",
+  "tables": [
+    {
+      "content": [
+        [
+          "Milestone",
+          "Due Date",
+          "Status"
+        ],
+        [
+          "Platform Launch",
+          "Oct 15",
+          "Complete"
+        ],
+        [
+          "User Testing",
+          "Nov 1",
+          "Complete"
+        ],
+        [
+          "Documentation",
+          "Nov 15",
+          "In Progress"
+        ]
+      ],
+      "page_or_slide": null,
+      "caption": null
+    }
+  ],
+  "images": [],
+  "metadata": {
+    "title": null,
+    "author": "python-docx",
+    "created_date": "2013-12-23T23:15:00Z",
+    "modified_date": "2013-12-23T23:15:00Z",
+    "page_count": null,
+    "file_format": "docx",
+    "file_size_bytes": 37062,
+    "source_filename": "project_status.docx"
+  },
+  "errors": []
+}
