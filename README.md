@@ -55,7 +55,7 @@ print(result.metadata)
 | Format | Status | Notes |
 |--------|--------|-------|
 | PDF    | Full   | Text with heading detection, tables, images, metadata |
-| DOCX   | Stub   | Architecture supports it, implementation pending |
+| DOCX   | Full   | Text with heading styles, tables, images, metadata |
 | PPTX   | Stub   | Architecture supports it, implementation pending |
 | XLSX   | Stub   | Architecture supports it, implementation pending |
 

@@ -102,10 +102,10 @@ class TestDocumentRouter:
         result = router.process_document(tmp_pdf)
         assert isinstance(result, ExtractionResult)
 
-    def test_process_document_with_stub_extractor(self, tmp_docx):
+    def test_process_document_with_stub_extractor(self, tmp_pptx):
         """Test process_document works with stub extractors."""
         router = DocumentRouter()
-        result = router.process_document(tmp_docx)
+        result = router.process_document(tmp_pptx)
         assert isinstance(result, ExtractionResult)
         # Stub should return an error message
         assert len(result.errors) > 0

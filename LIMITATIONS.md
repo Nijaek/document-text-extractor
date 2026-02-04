@@ -5,7 +5,6 @@
 | Limitation | Impact | Proposed Solution |
 |------------|--------|-------------------|
 | No OCR for scanned PDFs | Cannot extract text from image-only PDFs | Integrate Tesseract for local OCR or AWS Textract/Google Document AI for cloud-based OCR |
-| DOCX extractor not implemented | Cannot process Word files | Architecture fully supports it — follows same BaseExtractor pattern. Stub included. |
 | PPTX extractor not implemented | Cannot process PowerPoint files | Architecture fully supports it — follows same BaseExtractor pattern. Stub included. |
 | XLSX extractor not implemented | Cannot process Excel files | Architecture fully supports it — follows same BaseExtractor pattern. Stub included. |
 | No AI-powered image descriptions | Only metadata extracted, no semantic content | Integrate a vision model (Claude, GPT-4V) for automatic captioning. Requires API key and cost management. |
