@@ -2,7 +2,7 @@
 Document Extraction System - Main Package
 
 This package provides a unified interface for extracting content from
-PDF, DOCX, and PPTX documents.
+PDF, DOCX, PPTX, and XLSX documents.
 
 Exports:
     DocumentRouter: Routes files to appropriate extractors
@@ -11,10 +11,7 @@ Exports:
     FileFormat: Enum of supported file formats
 """
 
-# TODO: Uncomment when router and models are implemented
-# from .router import DocumentRouter, process_document
-# from .models import ExtractionResult, FileFormat
+from .router import DocumentRouter, process_document
+from .models import ExtractionResult, FileFormat
 
-# __all__ = ["DocumentRouter", "process_document", "ExtractionResult", "FileFormat"]
-
-pass
+__all__ = ["DocumentRouter", "process_document", "ExtractionResult", "FileFormat"]
