@@ -42,7 +42,7 @@ class PDFExtractor(BaseExtractor):
             return ""
 
         # First pass: collect all font sizes to determine heading thresholds
-        all_font_sizes = set()
+        all_font_sizes: set[float] = set()
         for page in self._doc:
             text_dict = page.get_text("dict")
             for block in text_dict.get("blocks", []):
@@ -53,12 +53,19 @@ class PDFExtractor(BaseExtractor):
                             if size > 0:
                                 all_font_sizes.add(round(size, 1))
 
-        # Sort font sizes descending to determine heading levels
-        sorted_sizes = sorted(all_font_sizes, reverse=True)
+        if not all_font_sizes:
+            return ""
 
-        # Map font sizes to heading levels (top 3 distinct sizes)
+        # Headings are typically ≥14pt; smaller text is body/table content
+        min_heading_size = 14.0
+        heading_sizes = sorted(
+            [s for s in all_font_sizes if s >= min_heading_size],
+            reverse=True
+        )
+
+        # Map heading font sizes to levels (top 3)
         size_to_level = {}
-        for i, size in enumerate(sorted_sizes[:3]):
+        for i, size in enumerate(heading_sizes[:3]):
             size_to_level[size] = i + 1  # H1, H2, H3
 
         # Second pass: extract text with heading detection
